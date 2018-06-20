@@ -1,0 +1,25 @@
+﻿@using TODOList.Domain.Entity
+@model IList<TODOList.Domain.Entity.SMS>
+
+@{
+    ViewBag.Title = "Admin";
+}
+
+<h2>Send</h2>
+@using (Html.BeginForm("TestSend", "SMS")) {
+    <input name="phone" value="+610478677410" placeholder="Number" /><br />
+    <input name="message" value="" placeholder="Message" /><br />
+    <button type="submit">Submit</button>
+}
+
+<h2>Messages:</h2>
+@if (Model != null) {
+    foreach (SMS sms in Model.OrderByDescending(x => x.SMSID)) {
+        <hr/>
+        <text>
+            <b>(@sms.SMSID) @sms.NumberFrom&ensp;<i class="glyphicon glyphicon-arrow-right"></i>&ensp;@sms.NumberTo</b>:
+            <i>@sms.Message</i>
+        </text>
+
+    }
+}

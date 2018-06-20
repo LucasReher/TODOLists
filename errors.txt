@@ -1,0 +1,2 @@
+16/06/2018 12:24:08 PM: Entity of type "ApplicationUser" in state "Added" has the following validation errors:
+- Property: "User", Error: "User name lucas.reher@gmail.com is already taken."

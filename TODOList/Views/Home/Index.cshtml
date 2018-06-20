@@ -1,0 +1,124 @@
+﻿@using System.Activities.Expressions
+@using TODOList.Models
+@model TODOList.Models.TodoListsModel
+@{
+    ViewBag.Title = "TODO Lists";
+}
+<div class="row">
+    @foreach (bool collumn in new[] { true, false }) {
+        <div class="col-md-6">
+            @foreach (TodoListModel l in Model.TodoLists) {
+                // Add first, third, fifth... lists to left hand side
+                if (l.LeftPositioned == collumn) {
+                    <div class="todolist" data-list-id="@l.ListID">
+                        <h3>
+                            @l.ListName
+                        <a class="btn btn-default" data-action="deleteList" data-list-id="@l.ListID">&times;</a>
+                    </h3>
+                    @foreach (TodoTaskModel t in l.TodoTasks) {
+                        <div class="todotask" style="border-color: @t.Colour" data-task-id="@t.TaskID">
+                            <h4>
+                                @t.TaskName
+                            <a class="btn btn-default" data-action="deleteTask" data-task-id="@t.TaskID">&times;</a>
+                        </h4>
+
+                        <p>@t.Description</p>
+                    </div>
+                    }
+
+                    <div class="todotask" style="border-color: black">
+                        <h4>Create New Task</h4>
+                        <div class="form-group">
+                            <input type="text" class="form-control" data-list-id="@l.ListID" name="taskName" placeholder="Task Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" data-list-id="@l.ListID" name="taskDescription" placeholder="Task Description">
+                        </div>
+                        <button type="button" data-action="createTask" data-list-id="@l.ListID" class="btn btn-success">Create Task</button>
+                    </div>
+
+                    <p><b>Created on: </b>@l.DateCreated</p>
+                </div>
+                }
+            }
+            <div class="new-list @(collumn == false ? "hidden-xs hidden-sm" : "")">
+                <h3>Create New List</h3>
+                <div id="create-list">
+                    <div>
+                        @using (Html.BeginForm("CreateList", "Home", FormMethod.Post, new { @class = "form-inline", role = "form", id = "form-list-left" })) {
+                            @Html.TextBoxFor(model => model.NewListName, new { @class = "form-group", placeholder = "List Name" })
+                            Model.NewListPositon = collumn;
+                            @Html.HiddenFor(model => model.NewListPositon)
+                            <button type="submit" class="btn btn-primary">Create List</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section scripts {
+    <script>
+
+        $("[data-action='deleteList']").on("click",
+            function () {
+                var listID = $(this).attr("data-list-id");
+                $.ajax({
+                    method: "POST",
+                    url: '@Url.Action("DeleteList", "Home")',
+                    datatype: "json",
+                    data: {
+                        listID
+                    },
+                    success: function (result) {
+                        $(`.todolist[data-list-id=${listID}]`).fadeOut(function () {
+                            $(this).remove();
+                        });
+                    }
+                });
+
+            });
+
+        $("[data-action='deleteTask']").on("click",
+            function() {
+                var taskID = $(this).attr("data-task-id");
+                $.ajax({
+                    method: "POST",
+                    url: '@Url.Action("DeleteTask", "Home")',
+                    datatype: "json",
+                    data: {
+                        taskID
+                    },
+                    success: function (result) {
+                        $(`.todotask[data-task-id=${taskID}]`).fadeOut(function() {
+                            $(this).remove();
+                        });
+                    }
+                });
+
+            });
+
+        $("[data-action='createTask']").on("click",
+            function() {
+                var listID = $(this).attr("data-list-id");
+                var taskName = $(`[name='taskName'][data-list-id=${listID}]`).val();
+                var taskDescription = $(`[name='taskDescription'][data-list-id=${listID}]`).val();
+                $.ajax({
+                    method: "POST",
+                    url: '@Url.Action("CreateTask", "Home")',
+                    datatype: "json",
+                    data: {data: {
+                        "@(nameof(CreateTaskModel.ListID))": listID,
+                        "@(nameof(CreateTaskModel.TaskName))": taskName,
+                        "@(nameof(CreateTaskModel.Description))": taskDescription
+                    }},
+                    success: function(result) {
+                        location.reload(true);
+                    }
+                });
+            })
+    </script>
+}
+

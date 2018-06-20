@@ -1,0 +1,62 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: #ffff8b;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.jumbotron {
+    background-color: #ffa726;
+    margin: 1em 1em;
+    color: bkack;
+}
+
+.todolist {
+    background-color: #ffee58;
+    padding: 0.2em 1em;
+    margin: 1em 1em;
+    border-radius: 0.5em
+}
+
+.todotask {
+    padding: 1em 1em;
+    margin: 1em 1em;
+    border-radius: 0.8em;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.new-list {
+    background-color: #ffd95b;
+    padding: 0.2em 1em;
+    margin: 1em 1em;
+    border-radius: 0.5em
+}
+
+#create-list {
+    margin: 1em 1em;
+}
+
+
+.navbar {
+    background-color:#ffa726;
+}
